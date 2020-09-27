@@ -40,7 +40,24 @@ app.post('/', async (req, res) => {
     }
     const { rates } = data
     const result = converter(amount, rates[from], rates[to])
-    const responseData = { amount, from, to, result }
+    if (!result) {
+      res.json({
+        success: false,
+        error: {
+          info: 'Invalid currency'
+        }
+      })
+      return
+    }
+    const responseData = { 
+      success: true,
+      data: {
+        amount,
+        from,
+        to,
+        result 
+      }
+    }
     res.json(responseData)
   } catch (e) {
     res.status(400).json(e)
